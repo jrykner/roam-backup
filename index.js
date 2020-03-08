@@ -31,24 +31,30 @@ async function downloadDatabase(page, databaseName) {
     ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
   );
 
-  console.log(databaseName, ":: Opening Export menu");
-
   await page.waitForSelector(
-    ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
-  );
-  await page.click(
-    ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
-  );
+      ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
+    );
+    await page.click(
+      ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
+    );
 
-  await page.waitForSelector(
-    ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
-  );
-  await page.click(
-    ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
-  );
+    console.log("Opening Export menu");
 
-  console.log(databaseName, ":: Selecting JSON export");
+    await page.waitForSelector(
+      ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
+    );
+    await page.click(
+      ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
+    );
 
+    await page.waitForSelector(
+      ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
+    );
+    await page.click(
+      ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
+    );
+
+    console.log("Selecting JSON export");
   await page.waitForSelector(
     "div > .bp3-menu > li > .bp3-menu-item > .bp3-text-overflow-ellipsis"
   );
