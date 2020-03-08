@@ -68,7 +68,7 @@ async function downloadDatabase(page, databaseName) {
   console.log(databaseName, ":: Created export");
 
   console.log(databaseName, ":: Waiting 40 sec for it to download");
-  await page.waitFor(40000); // TODO: can wait till zip file appears instead
+  await page.waitFor(100000); // TODO: can wait till zip file appears instead
   // TODO: rename resulting files after different databases
 }
 
