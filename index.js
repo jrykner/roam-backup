@@ -1,4 +1,3 @@
-@@ -1,99 +1,125 @@
 require("dotenv").config();
 const config = {
   backupFolder: "backups"
