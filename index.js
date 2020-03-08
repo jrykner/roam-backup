@@ -38,6 +38,11 @@ const generateExport = async () => {
     await page.waitFor(5000);
 
     console.log("Successfully logged in");
+    
+    const getDatabases =
+    async page => await page.$$eval(
+        "#app > div:nth-child(1) > div > h4:nth-child(1) > a:nth-child(1)",
+        nodes => nodes.map(n => n.innerText))
 
     await page.waitForSelector(
       ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
