@@ -23,6 +23,9 @@ const getDatabases =
 
 async function downloadDatabase(page, databaseName) {
   if (databaseName) await page.goto(roamBaseUrl + "app/" + databaseName);
+  console.log(databaseName, ':: Starting download');
+
+  await page.waitFor(30000);
 
   await page.waitForSelector(
     ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
@@ -31,30 +34,24 @@ async function downloadDatabase(page, databaseName) {
     ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
   );
 
+  console.log(databaseName, ":: Opening Export menu");
+
   await page.waitForSelector(
-      ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
-    );
-    await page.click(
-      ".flex-h-box > div > .bp3-popover-wrapper > .bp3-popover-target > .bp3-small"
-    );
+    ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
+  );
+  await page.click(
+    ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
+  );
 
-    console.log("Opening Export menu");
+  await page.waitForSelector(
+    ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
+  );
+  await page.click(
+    ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
+  );
 
-    await page.waitForSelector(
-      ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
-    );
-    await page.click(
-      ".bp3-popover-content > .bp3-menu > li:nth-child(3) > .bp3-menu-item > .bp3-text-overflow-ellipsis"
-    );
+  console.log(databaseName, ":: Selecting JSON export");
 
-    await page.waitForSelector(
-      ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
-    );
-    await page.click(
-      ".bp3-popover-wrapper > .bp3-popover-target > div > .bp3-button > .bp3-button-text"
-    );
-
-    console.log("Selecting JSON export");
   await page.waitForSelector(
     "div > .bp3-menu > li > .bp3-menu-item > .bp3-text-overflow-ellipsis"
   );
@@ -91,7 +88,7 @@ async function login(page) {
 
   await page.$eval(".bp3-button", el => el.click());
 
-  await page.waitFor(10000);
+  await page.waitFor(30000);
 
   console.log("Successfully logged in");
 }
@@ -106,15 +103,7 @@ const generateExport = async () => {
     });
 
     await login(page);
-
-    const databases = await getDatabases(page);
-    console.log("Found the following databases", databases);
-    if (databases && databases.length) {
-      await Promise.all(databases.map(name => downloadDatabase(page, name)))
-    } else {
-      // single-database
-      await downloadDatabase(page)
-    }
+    await downloadDatabases(page);
   } catch (err) {
     console.error("Something went wrong!");
     console.error(err);
@@ -123,6 +112,19 @@ const generateExport = async () => {
   }
   await browser.close();
 };
+
+async function downloadDatabases(page) {
+  const databases = await getDatabases(page);
+  console.log("Found the following databases", databases);
+  if (databases && databases.length) {
+    for (const name of databases) {
+      await downloadDatabase(page, name)
+    }
+  } else {
+    // single-database
+    await downloadDatabase(page)
+  }
+}
 
 const uploadToS3 = async filename => {
   console.log(`Uploading ${filename} to S3`);
