@@ -83,7 +83,7 @@ const generateExport = async () => {
     console.log("Created export");
 
     console.log("Waiting five seconds for it to download");
-    await page.waitFor(5000);
+    await page.waitFor(7000);
   } catch (err) {
     console.error("Something went wrong!");
     console.error(err);
