@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: "*/1440 * * * *"
+    - cron: "*/34560 * * * *"
 
 jobs:
   backup:
